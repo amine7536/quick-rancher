@@ -1,0 +1,22 @@
+version: '2'
+services:
+  nginxproxy:
+    image: pixelfactory/nginx-proxy-ssl:latest
+    ports:
+     - "443:443"
+    volumes:
+     - '/home/rancher/nginx-proxy/ssl:/etc/lego/certificates:rw'
+    environment:
+      TARGET_SERVICE: "rancherserver:8080"
+      CERT_DOMAINS: "rancher.pixelfactory.io"
+      CERT_EMAIL: "amine.benseddik@pixelfactory.io"
+      ENABLE_SSL: "true"
+      LETSENCRYPT_MODE: "prod"
+      ACME_CHALLENGE: "dns-01"
+      AWS_REGION: "eu-west-1"
+      AWS_ACCESS_KEY_ID: ""
+      AWS_SECRET_ACCESS_KEY: ""
+  rancherserver:
+    image: rancher/server:latest
+    volumes:
+     - '/home/rancher/rancher-server/mysql:/var/lib/mysql:rw'
